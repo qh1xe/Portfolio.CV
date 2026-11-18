@@ -1,14 +1,14 @@
 @extends('layouts.portfolio')
 @php
-$titles = ['about' => 'About me', 'portfolio' => 'Projects I’ve Made', 'skills' => 'Skills & interests', 'experience' => 'Experience & education', 'contact' => 'Contact'];
-$intros = ['about' => 'A student software developer with a curious mind, an eye for detail and a drive to keep learning.', 'portfolio' => 'A collection of my projects, the ideas behind them and what they do.', 'skills' => 'The skills I am developing as a student software developer, from first idea to final interaction.', 'experience' => 'The learning and experience behind the work.', 'contact' => 'Every new collaboration starts with a conversation.'];
+$titles = ['about' => 'About me', 'portfolio' => 'Selected Projects & Archive', 'skills' => 'Skills & interests', 'experience' => 'Experience & education', 'contact' => 'Contact'];
+$intros = ['about' => 'A student software developer with a curious mind, an eye for detail and a drive to keep learning.', 'portfolio' => 'Web applications, backend exercises, Python projects and interface studies.', 'skills' => 'The skills I am developing as a student software developer, from first idea to final interaction.', 'experience' => 'The learning and experience behind the work.', 'contact' => 'Every new collaboration starts with a conversation.'];
 @endphp
 @section('title', $titles[$page])
 @section('content')
 <section class="page-intro wrap">
 <a class="breadcrumb" href="{{ route('home') }}">Home</a><span class="breadcrumb"> / {{ $titles[$page] }}</span>
 <p class="eyebrow">CV & PORTFOLIO / {{ strtoupper($page) }}</p>
-<h1>{{ strtoupper($titles[$page]) }}<span class="page-dot">.</span></h1>
+<h1>{{ $titles[$page] }}<span class="page-dot">.</span></h1>
 <p class="page-lead">{{ $intros[$page] }}</p>
 </section>
 <div class="page-content wrap">
@@ -68,40 +68,7 @@ $intros = ['about' => 'A student software developer with a curious mind, an eye 
 
 @break
 @case('portfolio')
-<div class="project-list">
-@foreach ([1, 2, 3] as $number)
-<article class="project-detail">
-@if($number === 1)
-<div class="project-placeholder project-screenshot"><span class="eyebrow">PROJECT / 01</span><img src="{{ asset('images/tradesphere-homepage.png') }}" alt="TradeSphere homepage with community navigation and the headline Patience is a position too" loading="lazy" width="2302" height="1338"></div>
-@else
-<div class="project-placeholder" aria-label="Project image placeholder"><span class="eyebrow">PROJECT / 0{{ $number }}</span><span class="placeholder-symbol" aria-hidden="true">✳</span><span>Project image coming soon</span></div>
-@endif
-
-<div><span class="eyebrow">{{ $number === 1 ? 'COMMUNITY / LEARNING PLATFORM' : 'PROJECT DETAILS COMING SOON' }}</span><h2>@if($number === 1) TradeSphere @else Project {{ $number }} — title coming soon @endif</h2>@if($number === 1)
-<p>TradeSphere is a community and learning platform that brings traders from around the world together to help each other, share ideas and grow. From beginners learning about candlestick wicks and market structure to traders with years of experience, everyone is welcome.</p>
-<p>The platform combines learning courses with a Twitter-style social feed where members can ask questions, share their trades and learn from one another in a supportive, fun community.</p>
-@else
-<p>A short introduction to the project will go here: what I made, who it is for and what it does.</p>
-@endif<h3>My contribution</h3>
-@if($number === 1)
-<p>I am the owner of TradeSphere and built the website, bringing my idea for a welcoming trading community and learning platform to life.</p>
-<details class="project-tech-details">
-<summary>Tools & technologies</summary>
-<ul class="project-tech-list">
-<li><strong>Languages:</strong> HTML, CSS, JavaScript, PHP and SQL.</li>
-<li><strong>Framework & templates:</strong> Laravel 10 and Blade.</li>
-<li><strong>Backend services:</strong> Supabase Auth, PostgreSQL database, Row Level Security policies and Supabase Storage for uploaded images.</li>
-<li><strong>Build & dependencies:</strong> Vite, npm and Composer.</li>
-<li><strong>Libraries:</strong> Supabase JavaScript client, Axios and libphonenumber-js for phone-number validation.</li>
-<li><strong>Learning integration:</strong> Mindsmith courses, SCORM 1.2, embedded course players and progress tracking.</li>
-</ul>
-</details>
-@else
-<p>Details about my role, the features I built and what I learned will be added here.</p><h3>Tools & technologies</h3><p>The languages, frameworks and tools used for this project will be listed here.</p>
-@endif<span class="detail-status">Demo and source code links coming soon</span></div>
-</article>
-@endforeach
-</div>
+@include('partials.project-archive')
 @break
 @case('skills')
 @include('partials.skills', ['skillPrefix' => 'detail'])

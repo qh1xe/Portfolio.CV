@@ -30,6 +30,7 @@
 <figure><a href="{{ asset($photo) }}" aria-label="View portrait photograph {{ $loop->iteration }} in full size"><img src="{{ asset($photo) }}" alt="Portrait photograph by Chloe Waldron, image {{ $loop->iteration }}" loading="lazy"></a><figcaption>PORTRAIT NOTES / {{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</figcaption></figure>
 @endforeach
 </div>
+@include('partials.photo-viewer')
 @else
 <div class="football-gallery-empty"><span class="eyebrow">A LOOK THROUGH MY LENS</span><h3>Portraits coming soon.</h3><p>This is where I’ll share my favourite portrait photographs.</p></div>
 @endif

@@ -34,8 +34,17 @@ Route::get('/photography/'.$category.'/{album?}', function ($album = null) use (
     return view($category === 'football' ? 'football-photography' : 'portrait-photography', compact('photos', 'albums', 'album'));
 })->name('photography.'.$category);
 }
-foreach (['about', 'portfolio', 'skills', 'experience', 'contact'] as $page) {
+foreach (['about', 'skills', 'experience', 'contact'] as $page) {
 Route::view('/'.$page, 'detail', ['page' => $page])->name($page);
 }
+$projectArchive = function (\Illuminate\Http\Request $request) {
+    $category = $request->query('category');
+    $activeCategory = is_string($category) && array_key_exists($category, config('portfolio.categories'))
+        ? $category : 'all';
+
+    return view('detail', ['page' => 'portfolio', 'activeCategory' => $activeCategory]);
+};
+Route::get('/projects', $projectArchive)->name('portfolio');
+Route::get('/portfolio', $projectArchive);
 Route::redirect('/pink', '/');
 Route::redirect('/dark', '/')->name('home.dark');
