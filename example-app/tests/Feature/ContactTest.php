@@ -42,6 +42,43 @@ class ContactTest extends TestCase
         Mail::assertNothingSent();
     }
 
+    public function test_contact_rejects_uploads_and_multipart_submissions(): void
+    {
+        Mail::fake();
+
+        $this->post('/contact', $this->message() + [
+            'attachment' => \Illuminate\Http\UploadedFile::fake()->create('attachment.txt', 1),
+        ])->assertStatus(415);
+        $this->post('/contact', $this->message(), [
+            'Content-Type' => 'multipart/form-data; boundary=test',
+        ])->assertStatus(415);
+
+        Mail::assertNothingSent();
+    }
+
+    public function test_contact_rerenders_after_rejecting_non_text_input(): void
+    {
+        Mail::fake();
+
+        $this->from('/contact')->post('/contact', array_replace($this->message(), [
+            'name' => ['unexpected'],
+        ]))->assertSessionHasErrors('name');
+        $this->get('/contact')->assertOk()->assertSee('Hello Chloe!');
+
+        Mail::assertNothingSent();
+    }
+
+    public function test_contact_rejects_oversized_requests(): void
+    {
+        Mail::fake();
+
+        $this->postJson('/contact', $this->message() + [
+            'unexpected' => str_repeat('a', 65536),
+        ])->assertStatus(413);
+
+        Mail::assertNothingSent();
+    }
+
     public function test_delivery_failure_preserves_message_and_shows_error(): void
     {
         config(['mail.default' => 'smtp']);

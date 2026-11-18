@@ -12,6 +12,10 @@ class ContactController extends Controller
 {
     public function store(Request $request)
     {
+        $contentType = strtolower(trim(explode(';', $request->header('Content-Type', ''), 2)[0]));
+        abort_if(str_starts_with($contentType, 'multipart/') || $request->files->count() > 0, 415);
+        abort_if(strlen($request->getContent()) > 65536, 413);
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100', 'not_regex:/[\r\n]/'],
             'email' => ['required', 'email', 'max:254'],

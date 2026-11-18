@@ -141,69 +141,37 @@ $intros = ['about' => 'A student software developer with a curious mind, an eye 
 @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
 </ul><a class="contact-form-link" href="mailto:{{ config('contact.email') }}">Email {{ config('contact.email') }} directly</a></div>
 @endif
+@php
+    $oldText = static function (string $field): string {
+        $value = old($field);
+
+        return is_string($value) ? $value : '';
+    };
+@endphp
 <form class="contact-form" action="{{ route('contact.send') }}#contact-form" method="POST">
 @csrf
 <div class="contact-form-row">
-<div><label for="contact-name">Your name</label><input id="contact-name" name="name" type="text" autocomplete="name" maxlength="100" required value="{{ old('name') }}" @error('name') aria-invalid="true" @enderror></div>
-<div><label for="contact-email">Your email</label><input id="contact-email" name="email" type="email" autocomplete="email" maxlength="254" required value="{{ old('email') }}" @error('email') aria-invalid="true" @enderror></div>
+<div><label for="contact-name">Your name</label><input id="contact-name" name="name" type="text" autocomplete="name" maxlength="100" required value="{{ $oldText('name') }}" @error('name') aria-invalid="true" @enderror></div>
+<div><label for="contact-email">Your email</label><input id="contact-email" name="email" type="email" autocomplete="email" maxlength="254" required value="{{ $oldText('email') }}" @error('email') aria-invalid="true" @enderror></div>
 </div>
 <label for="contact-topic">What would you like to talk about?</label>
 <select id="contact-topic" name="topic" required aria-controls="contact-other-topic" @error('topic') aria-invalid="true" @enderror>
-<option value="" disabled @selected(!old('topic'))>Choose a topic</option>
+<option value="" disabled @selected(!$oldText('topic'))>Choose a topic</option>
 @foreach(config('contact.topics') as $value => $label)
-<option value="{{ $value }}" @selected(old('topic') === $value)>{{ $label }}</option>
+<option value="{{ $value }}" @selected($oldText('topic') === $value)>{{ $label }}</option>
 @endforeach
 </select>
 <div id="contact-other-topic">
 <label for="contact-custom-topic">Which topic would you like to discuss?</label>
-<textarea id="contact-custom-topic" name="other_topic" rows="3" maxlength="300" placeholder="Tell me the topic you have in mind…" @error('other_topic') aria-invalid="true" @enderror>{{ old('other_topic') }}</textarea>
+<textarea id="contact-custom-topic" name="other_topic" rows="3" maxlength="300" placeholder="Tell me the topic you have in mind…" @error('other_topic') aria-invalid="true" @enderror>{{ $oldText('other_topic') }}</textarea>
 </div>
 <noscript><p>Selecting “Other”? Please describe your topic in the field above.</p></noscript>
-<label for="contact-message">Your message</label><textarea id="contact-message" name="message" rows="7" maxlength="5000" required @error('message') aria-invalid="true" @enderror>{{ old('message') }}</textarea>
+<label for="contact-message">Your message</label><textarea id="contact-message" name="message" rows="7" maxlength="5000" required @error('message') aria-invalid="true" @enderror>{{ $oldText('message') }}</textarea>
 <div class="contact-form-trap" aria-hidden="true"><label for="contact-website">Leave this field empty</label><input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
 <p class="contact-form-note">All fields are required. Your details will only be used to respond to your message.</p>
 <button type="submit">Send message <span aria-hidden="true">↗</span></button>
 </form>
-<script>
-(() => {
-    const section = document.getElementById('contact-form');
-    const trigger = document.getElementById('contact-form-trigger');
-    document.getElementById('contact-form-close').addEventListener('click', () => {
-        section.hidden = true;
-        trigger.setAttribute('aria-expanded', 'false');
-        if (window.location.hash === '#contact-form') {
-            history.replaceState(null, '', window.location.pathname + window.location.search);
-        }
-        trigger.focus();
-    });
-    const revealForm = (moveFocus = false) => {
-        section.hidden = false;
-        trigger.setAttribute('aria-expanded', 'true');
-        if (moveFocus) {
-            document.getElementById('contact-form-title').focus({ preventScroll: true });
-            section.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-        }
-    };
-    trigger.addEventListener('click', () => revealForm(true));
-    const revealFromHash = () => {
-        if (window.location.hash === '#contact-form') revealForm();
-    };
-    window.addEventListener('hashchange', revealFromHash);
-    revealFromHash();
-    const topic = document.getElementById('contact-topic');
-    const customTopic = document.getElementById('contact-other-topic');
-    const input = document.getElementById('contact-custom-topic');
-    const updateTopic = () => {
-        const isOther = topic.value === 'other';
-        customTopic.hidden = !isOther;
-        input.disabled = !isOther;
-        input.required = isOther;
-    };
-    topic.addEventListener('change', updateTopic);
-    window.addEventListener('pageshow', updateTopic);
-    updateTopic();
-})();
-</script>
+<script src="{{ asset('js/contact.js') }}" defer></script>
 </section>
 @break
 @endswitch
