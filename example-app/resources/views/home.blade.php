@@ -1,43 +1,59 @@
 @extends('layouts.portfolio')
-@section('title', 'Student software developer portfolio')
+@section('title', 'Creative After Hours')
 @section('content')
-
-
-<section class="hero wrap" aria-labelledby="hero-title">
-<div class="eyebrow"><span>STUDENT SOFTWARE DEVELOPER / DIGITAL EXPLORER</span><span>PORTFOLIO </span></div>
-<div class="dark-heading"><h1 id="hero-title">CREATIVE<br><span>AFTER HOURS.</span></h1><span class="handnote">a curious mind,<br>a colourful world.</span><span class="dark-star" aria-hidden="true">✳</span></div>
-<div class="dark-visual"><img src="{{ asset('images/night-gallery.png') }}" alt="A dimly lit gallery filled with photography and art"><div class="image-shade"></div><span class="image-label">A DIFFERENT PERSPECTIVE.<br>THE SAME CURIOUS MIND.</span><span class="vertical-label">VISUAL NOTES / NO. 002</span><a class="dark-explore" href="#work">EXPLORE THE WORK <span>↘</span></a></div>
-<div class="dark-intro"><span class="status">● OPEN TO NEW IDEAS</span><p>A student software developer exploring design,<br>development and everything that catches the eye.</p><span>SCROLL TO DISCOVER ↓</span></div>
+@php($projects = config('portfolio.projects'))
+<section class="editorial-hero wrap" aria-labelledby="hero-title">
+    <div class="hero-copy">
+        <p class="eyebrow">SOFTWARE DEVELOPMENT · AMSTERDAM</p>
+        <h1 id="hero-title">Creative <em>after</em><br>Hours<span class="page-dot">.</span></h1>
+        <p class="page-lead">I’m Chloe, a student software developer at ROCvA Zuidoost. I build web applications and explore how design can make them easier to use.</p>
+        <div class="hero-actions">
+            <a class="action action-primary" href="#work">Explore projects <span aria-hidden="true">↓</span></a>
+            <a class="action" href="https://github.com/qh1xe">GitHub <span aria-hidden="true">↗</span></a>
+        </div>
+    </div>
+    <div class="hero-panel">
+        <div class="hero-panel-heading"><span class="eyebrow">CHLOE / QH1XE</span><span class="page-dot" aria-hidden="true">✳</span></div>
+        <dl>
+            <div><dt>Location</dt><dd>Amsterdam, Netherlands</dd></div>
+            <div><dt>Education</dt><dd>Software Development · ROCvA Zuidoost</dd></div>
+            <div><dt>Focus</dt><dd>Web applications & interactive interfaces</dd></div>
+        </dl>
+    </div>
 </section>
 
-<div class="ticker" aria-hidden="true">CURIOUS BY NATURE <span>✳</span> CREATIVE AT HEART <span>✳</span> ALWAYS EXPLORING <span>✳</span></div>
-<section class="work wrap" id="work">
-<div class="section-heading"><div><span class="eyebrow">01 / MY PROJECTS</span><h2>PROJECTS I’VE MADE.</h2></div><span>PROJECT DETAILS COMING SOON</span></div>
-<div class="projects">
-@foreach ([1, 2] as $number)
-<article><a class="project-preview" href="{{ route('portfolio') }}" aria-label="Explore project {{ $number }} and all projects">@if($number === 1)
-<div class="project-placeholder project-screenshot"><span class="eyebrow">PROJECT / 01</span><img src="{{ asset('images/tradesphere-homepage.png') }}" alt="TradeSphere homepage with community navigation and the headline Patience is a position too" loading="lazy" width="2302" height="1338"></div>
-@else
-<div class="project-placeholder"><span class="eyebrow">PROJECT / 0{{ $number }}</span><span class="placeholder-symbol" aria-hidden="true">✳</span><span>Project image coming soon</span></div>
-@endif
-<div class="project-caption"><h3>@if($number === 1) TradeSphere @else Project {{ $number }} — title coming soon @endif</h3><span aria-hidden="true">↗</span></div></a><p class="project-summary">@if($number === 1) TradeSphere is a welcoming community and learning platform for traders worldwide, with courses and a social feed to ask questions, share trades and learn together. @else A short description of what I made and the tools I used will go here. @endif</p></article>
-@endforeach
-</div>
-<a class="section-link" href="{{ route('portfolio') }}">View all projects <span>↗</span></a>
+<section id="work" class="editorial-section wrap" aria-labelledby="work-title">
+    <div class="section-heading">
+        <h2 id="work-title">Featured projects</h2>
+        <a class="section-link" href="{{ route('portfolio') }}">View project archive <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="featured-project">
+        @include('partials.project-art', ['project' => $projects[0]])
+        <div class="featured-copy">
+            <span class="eyebrow">COMMUNITY & LEARNING PLATFORM</span>
+            <h3>{{ $projects[0]['title'] }}</h3>
+            <p>{{ $projects[0]['description'] }}</p>
+            <a class="action" href="{{ route('portfolio') }}#tradesphere">Explore TradeSphere <span aria-hidden="true">↗</span></a>
+        </div>
+    </div>
+    <div class="project-index">
+        @foreach (array_slice($projects, 1, 3) as $project)
+            <a href="{{ route('portfolio') }}#{{ $project['id'] }}">{{ $project['title'] }} <span aria-hidden="true">↗</span></a>
+        @endforeach
+    </div>
 </section>
-<div class="home-after-projects wrap"><section class="about home-about" id="about"><span class="eyebrow">02 / BEHIND THE IDEAS</span><h2>ALWAYS CURIOUS. ALWAYS CREATING.</h2><div><p>As a student software developer, I use this portfolio to share what I am learning about how things look, feel and work. From the first sketch to the final interaction, every detail is a chance to try something new.</p></div><a class="section-link" href="{{ route('about') }}">More about me <span>↗</span></a>
-</section>
-<div class="home-profile-grid"><section class="cv-section home-skills" id="skills" aria-labelledby="skills-title">
-<span class="eyebrow">03 / WHAT I BRING</span><h2 id="skills-title">SKILLS & INTERESTS.</h2>
-@include('partials.skills', ['skillPrefix' => 'home'])
-<a class="section-link" href="{{ route('skills') }}">Explore my skills <span>↗</span></a>
-</section>
-<section class="cv-section home-background" id="experience" aria-labelledby="experience-title">
-<span class="eyebrow">04 / MY BACKGROUND</span><h2 id="experience-title">EXPERIENCE & EDUCATION.</h2>
-<p class="cv-note">I study MBO 4 Software Development at ROCvA Zuid-Oost, following earlier studies at BIT-Academy and Bredero Mavo. Alongside my studies, I work as a server at Soju Bar, building on retail experience at Etos and Dirk van den Broek.</p>
-<a class="section-link" href="{{ route('experience') }}">View my background <span>↗</span></a>
-</section>
-</div><section class="contact home-contact" id="contact"><span class="eyebrow">05 / THE NEXT CHAPTER</span><h2>LET’S MAKE AN IMPRESSION.</h2><p>Based in Amsterdam. Get in touch by email or phone, or find me on LinkedIn and GitHub.</p><a href="{{ route('contact') }}">Get in touch <span>↗</span></a></section>
 
-</div>
+<section class="editorial-section wrap" aria-labelledby="trajectory-title">
+    <div class="section-heading"><h2 id="trajectory-title">Software & academic trajectory</h2></div>
+    <div class="trajectory-grid">
+        <article><span class="eyebrow">DEVELOPMENT</span><h3>Skills & interests</h3><p>Web development, interface design and the tools I’m learning through my projects.</p><a class="section-link" href="{{ route('skills') }}">Explore my skills ↗</a></article>
+        <article><span class="eyebrow">EDUCATION & EXPERIENCE</span><h3>Curriculum vitae</h3><p>My software development studies at ROCvA Zuidoost and my experience in hospitality and retail.</p><a class="section-link" href="{{ route('experience') }}">View my CV ↗</a></article>
+        <article><span class="eyebrow">PHOTOGRAPHY</span><h3>Through the lens</h3><p>Sports photography and portraits from my personal collection.</p><a class="section-link" href="{{ route('photography') }}">Browse photography ↗</a></article>
+    </div>
+    <a class="section-link" href="{{ route('about') }}">More about me ↗</a>
+</section>
+<section class="editorial-section wrap home-inquiry" aria-labelledby="inquiry-title">
+    <h2 id="inquiry-title">Let’s talk about what you’re building.</h2>
+    <a class="action action-primary" href="{{ route('contact') }}">Get in touch <span aria-hidden="true">↗</span></a>
+</section>
 @endsection
